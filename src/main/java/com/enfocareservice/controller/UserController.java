@@ -1,12 +1,14 @@
 package com.enfocareservice.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.enfocareservice.model.User;
+import com.enfocareservice.model.ChangePasswordRequest;
 import com.enfocareservice.service.UserService;
 
 @RestController
@@ -15,9 +17,10 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping(value = "/user/save")
-	public ResponseEntity<User> saveUser(@RequestBody User user) {
-		return ResponseEntity.ok(userService.addUser(user));
+	@PatchMapping
+	public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal connectedUser) {
+		userService.changePassword(request, connectedUser);
+		return ResponseEntity.ok().build();
 	}
 
 }
