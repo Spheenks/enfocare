@@ -46,13 +46,13 @@ public class ProfileEntity {
 	private String classification;
 
 	@Column(name = "is_doctor")
-	private String isDoctor;
+	private Boolean isDoctor;
 
 	@Column(name = "medical_field")
 	private String medicalField;
 
 	@Column(name = "biometric")
-	private String biometric;
+	private Boolean biometric;
 
 	@Column(name = "age")
 	private Integer age;
@@ -65,6 +65,17 @@ public class ProfileEntity {
 
 	@Column(name = "bloodtype")
 	private String bloodType;
+
+	@Column(name = "avatar_directory")
+	private String avatarDirectory;
+
+	public String getAvatarDirectory() {
+		return avatarDirectory;
+	}
+
+	public void setAvatarDirectory(String avatarDirectory) {
+		this.avatarDirectory = avatarDirectory;
+	}
 
 	public Long getProfileId() {
 		return profileId;
@@ -146,11 +157,11 @@ public class ProfileEntity {
 		this.classification = classification;
 	}
 
-	public String getIsDoctor() {
+	public Boolean getIsDoctor() {
 		return isDoctor;
 	}
 
-	public void setIsDoctor(String isDoctor) {
+	public void setIsDoctor(Boolean isDoctor) {
 		this.isDoctor = isDoctor;
 	}
 
@@ -162,11 +173,11 @@ public class ProfileEntity {
 		this.medicalField = medicalField;
 	}
 
-	public String getBiometric() {
+	public Boolean getBiometric() {
 		return biometric;
 	}
 
-	public void setBiometric(String biometric) {
+	public void setBiometric(Boolean biometric) {
 		this.biometric = biometric;
 	}
 

@@ -68,6 +68,8 @@ public class AuthenticationService {
 
 		UserEntity userEntity = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
 
+		revokeAllUserTokens(userEntity);
+
 		String jwtToken = jwtService.generateToken(userEntity);
 
 		String refreshToken = jwtService.generateRefreshToken(userEntity);
@@ -97,7 +99,7 @@ public class AuthenticationService {
 	}
 
 	private void revokeAllUserTokens(UserEntity user) {
-		var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+		var validUserTokens = tokenRepository.findAllValidTokenByUserId(user.getId());
 		if (validUserTokens.isEmpty())
 			return;
 		validUserTokens.forEach(token -> {

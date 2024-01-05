@@ -14,13 +14,22 @@ public class Profile {
 	private String phone;
 	private Double weight;
 	private String classification;
-	private String isDoctor;
+	private Boolean isDoctor;
 	private String medicalField;
-	private String biometric;
+	private Boolean biometric;
 	private Integer age;
 	private Double bmi;
 	private String profileSetup;
 	private String bloodType;
+	private String avatarDirectory;
+
+	public String getAvatarDirectory() {
+		return avatarDirectory;
+	}
+
+	public void setAvatarDirectory(String avatarDirectory) {
+		this.avatarDirectory = avatarDirectory;
+	}
 
 	public String getBloodType() {
 		return bloodType;
@@ -110,11 +119,11 @@ public class Profile {
 		this.classification = classification;
 	}
 
-	public String getIsDoctor() {
+	public Boolean getIsDoctor() {
 		return isDoctor;
 	}
 
-	public void setIsDoctor(String isDoctor) {
+	public void setIsDoctor(Boolean isDoctor) {
 		this.isDoctor = isDoctor;
 	}
 
@@ -126,11 +135,11 @@ public class Profile {
 		this.medicalField = medicalField;
 	}
 
-	public String getBiometric() {
+	public Boolean getBiometric() {
 		return biometric;
 	}
 
-	public void setBiometric(String biometric) {
+	public void setBiometric(Boolean biometric) {
 		this.biometric = biometric;
 	}
 

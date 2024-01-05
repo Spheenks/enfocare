@@ -27,7 +27,7 @@ public class ProfileMapper {
 		profile.setProfileSetup(profileEntity.getProfileSetup());
 		profile.setWeight(profileEntity.getWeight());
 		profile.setBloodType(profileEntity.getBloodType());
-
+		profile.setAvatarDirectory(profileEntity.getAvatarDirectory());
 		return profile;
 
 	}
