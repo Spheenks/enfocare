@@ -31,6 +31,9 @@ public class AuthenticationService {
 	private TokenRepository tokenRepository;
 
 	@Autowired
+	private UserStatusService userStatusService;
+
+	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
@@ -54,6 +57,8 @@ public class AuthenticationService {
 
 		userRepository.save(userEntity);
 
+		userStatusService.registerUserStatus(registerRequest.getEmail());
+
 		String jwtToken = jwtService.generateToken(userEntity);
 
 		authenticationResponse.setToken(jwtToken);
@@ -67,6 +72,8 @@ public class AuthenticationService {
 				authenticationRequest.getPassword()));
 
 		UserEntity userEntity = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
+
+		userStatusService.setUserOnline(userEntity.getEmail());
 
 		revokeAllUserTokens(userEntity);
 

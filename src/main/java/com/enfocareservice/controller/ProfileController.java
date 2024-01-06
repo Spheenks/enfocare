@@ -35,10 +35,31 @@ public class ProfileController {
 
 		System.err.println("getProfileByEmail Called");
 
-		System.err.println("getProfileByEmail Called");
 		try {
 			// Your ProfileService should have a method to retrieve a profile by email
 			Profile profile = profileService.getProfileByEmail(email);
+
+			if (profile != null) {
+				return ResponseEntity.ok(profile);
+			} else {
+				// If no profile is found, return 404 Not Found
+				return ResponseEntity.notFound().build();
+			}
+		} catch (Exception e) {
+			// Handle exceptions, e.g., log the error
+			System.err.println(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@GetMapping("/specialization/{specialization}")
+	public ResponseEntity<Profile> getProfileByMedicalField(@PathVariable String specialization) {
+
+		System.err.println("getProfileByMedicalField Called");
+
+		try {
+			// Your ProfileService should have a method to retrieve a profile by email
+			Profile profile = profileService.getProfileByMedicalField(specialization);
 
 			if (profile != null) {
 				return ResponseEntity.ok(profile);

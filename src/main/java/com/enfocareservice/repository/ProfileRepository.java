@@ -10,4 +10,6 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Long> {
 
 	ProfileEntity findByEmail(String email);
 
+	ProfileEntity findByMedicalField(String medicalField);
+
 }

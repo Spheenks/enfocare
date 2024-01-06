@@ -19,6 +19,12 @@ public class LogoutService implements LogoutHandler {
 	@Autowired
 	private TokenRepository tokenRepository;
 
+	@Autowired
+	private JwtService jwtService;
+
+	@Autowired
+	private UserStatusService userStatusService;
+
 	@Override
 	public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
@@ -37,5 +43,9 @@ public class LogoutService implements LogoutHandler {
 			tokenRepository.save(storedToken);
 			SecurityContextHolder.clearContext();
 		}
+
+		String userEmail = jwtService.extractUsername(jwt);
+
+		userStatusService.setUserOffline(userEmail);
 	}
 }

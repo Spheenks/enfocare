@@ -32,6 +32,11 @@ public class ProfileService {
 		return profileEntity != null ? profileMapper.map(profileEntity) : null;
 	}
 
+	public Profile getProfileByMedicalField(String medicalField) {
+		ProfileEntity profileEntity = profileRepository.findByMedicalField(medicalField);
+		return profileEntity != null ? profileMapper.map(profileEntity) : null;
+	}
+
 	public Profile createProfile(Profile profile) {
 
 		ProfileEntity profileEntity = new ProfileEntity();
