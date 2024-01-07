@@ -1,7 +1,11 @@
 package com.enfocareservice.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.enfocareservice.entity.LobbyQueueEntity;
 import com.enfocareservice.model.LobbyQueue;
@@ -26,11 +30,37 @@ public class LobbyQueueService {
 		LobbyQueueEntity lobbyQueueEntity = new LobbyQueueEntity();
 
 		lobbyQueueEntity.setDoctor(lobbyQueue.getDoctor());
-		lobbyQueueEntity.setPatient(lobbyQueueEntity.getPatient());
+		lobbyQueueEntity.setPatient(lobbyQueue.getPatient());
 		lobbyQueueEntity.setTimeIn(lobbyQueue.getTimeIn());
 
 		return lobbyQueueMapper.map(lobbyQueueRepository.save(lobbyQueueEntity));
 
+	}
+
+	public List<LobbyQueue> getLobbyQueueByDoctor(String doctor) {
+		List<LobbyQueue> lobbyQueues = null;
+		List<LobbyQueueEntity> lobbyQueueEntities = lobbyQueueRepository.findByDoctor(doctor);
+
+		if (!CollectionUtils.isEmpty(lobbyQueueEntities)) {
+
+			lobbyQueues = lobbyQueueEntities.stream().map(lobbyQueueMapper::map).collect(Collectors.toList());
+
+		}
+		return lobbyQueues;
+
+	}
+
+	public LobbyQueue selectEntityByDoctorAndPatien(String doctor, String patient) {
+
+		LobbyQueue lobbyQueue = null;
+
+		LobbyQueueEntity lobbyQueueEntity = lobbyQueueRepository.findByDoctorAndPatient(doctor, patient);
+
+		if (lobbyQueueEntity != null) {
+			lobbyQueue = lobbyQueueMapper.map(lobbyQueueEntity);
+		}
+
+		return lobbyQueue;
 	}
 
 	public void deleteEntityByDoctorAndPatient(String doctor, String patient) {
