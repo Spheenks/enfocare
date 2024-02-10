@@ -109,7 +109,7 @@ public class ProfileController {
 
 		try {
 			// Your ProfileService should have a method to handle file upload
-			profileService.uploadFile(email, file);
+			profileService.uploadAvatarFile(email, file);
 			return ResponseEntity.ok("File uploaded successfully");
 		} catch (IOException e) {
 			// Handle exceptions, e.g., log the error
@@ -140,6 +140,29 @@ public class ProfileController {
 
 		// If the profile or image is not found, return a 404 Not Found response
 		return ResponseEntity.notFound().build();
+	}
+
+	@GetMapping("/phone/{phone}")
+	public ResponseEntity<Profile> getByPhone(@PathVariable String phone) {
+
+		System.err.println("getByPhone Called");
+
+		try {
+			// Your ProfileService should have a method to retrieve a profile by email
+			Profile profile = profileService.getProfileByPhoneNumber(phone);
+
+			if (profile != null) {
+				return ResponseEntity.ok(profile);
+			} else {
+				// If no profile is found, return 404 Not Found
+				return ResponseEntity.notFound().build();
+			}
+		} catch (Exception e) {
+			// Handle exceptions, e.g., log the error
+			System.err.println(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
 	}
 
 }

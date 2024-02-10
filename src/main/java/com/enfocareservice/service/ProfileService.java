@@ -18,8 +18,8 @@ import com.enfocareservice.repository.ProfileRepository;
 @Service
 public class ProfileService {
 
-	@Value("${upload.dir}")
-	private String uploadDir;
+	@Value("${avatar.dir}")
+	private String avatarDir;
 
 	@Autowired
 	private ProfileRepository profileRepository;
@@ -63,9 +63,9 @@ public class ProfileService {
 		return result;
 	}
 
-	public void uploadFile(String email, MultipartFile file) {
+	public void uploadAvatarFile(String email, MultipartFile file) {
 		// Create the directory if it doesn't exist
-		Path directoryPath = Paths.get(uploadDir);
+		Path directoryPath = Paths.get(avatarDir);
 		try {
 			Files.createDirectories(directoryPath);
 		} catch (java.io.IOException e) {
@@ -77,7 +77,7 @@ public class ProfileService {
 		String uniqueFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
 		// Combine the directory path and the unique file name to get the full path
-		Path filePath = Paths.get(uploadDir, uniqueFileName);
+		Path filePath = Paths.get(avatarDir, uniqueFileName);
 
 		// Save the file to the specified location
 		try {
@@ -174,7 +174,20 @@ public class ProfileService {
 
 	public Path getFilePath(String filename) {
 
-		return Paths.get(uploadDir, filename);
+		return Paths.get(avatarDir, filename);
+
+	}
+
+	public Profile getProfileByPhoneNumber(String phoneNumber) {
+		Profile profile = null;
+
+		ProfileEntity profileEntity = profileRepository.findByPhone(phoneNumber);
+
+		if (profileEntity != null) {
+			profile = profileMapper.map(profileEntity);
+		}
+
+		return profile;
 
 	}
 
