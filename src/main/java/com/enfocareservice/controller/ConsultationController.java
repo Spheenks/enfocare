@@ -1,8 +1,12 @@
 package com.enfocareservice.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,4 +42,13 @@ public class ConsultationController {
 		return responseEntity;
 	}
 
+	@GetMapping("/doctor/{doctor}")
+	public List<Consultation> getConsultationsByDoctor(@PathVariable String doctor) {
+		return consultationService.findByDoctor(doctor);
+	}
+
+	@GetMapping("/patient/{patient}")
+	public List<Consultation> getConsultationsByPatient(@PathVariable String patient) {
+		return consultationService.findByPatient(patient);
+	}
 }

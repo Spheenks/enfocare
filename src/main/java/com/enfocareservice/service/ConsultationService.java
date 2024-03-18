@@ -1,5 +1,8 @@
 package com.enfocareservice.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,16 @@ public class ConsultationService {
 		consultationEntity.setTreatment(consultation.getTreatment());
 
 		return consultationMapper.map(consultationRepository.save(consultationEntity));
+	}
+
+	public List<Consultation> findByDoctor(String doctor) {
+		List<ConsultationEntity> entities = consultationRepository.findByDoctor(doctor);
+		return entities.stream().map(entity -> consultationMapper.map(entity)).collect(Collectors.toList());
+	}
+
+	public List<Consultation> findByPatient(String patient) {
+		List<ConsultationEntity> entities = consultationRepository.findByPatient(patient);
+		return entities.stream().map(entity -> consultationMapper.map(entity)).collect(Collectors.toList());
 	}
 
 }

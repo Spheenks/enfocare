@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,14 @@ public class MedicalFileService {
 	@Value("${medicalfile.dir}")
 	private String diagnosisDir;
 
+	public List<String> getRecipentEmailsList(String doctorEmail) {
+
+		return medicalFileRepository.findDistinctPatientEmailsByDoctorEmail(doctorEmail);
+	}
+
 	public void uploadDiagnosisFile(String patientEmail, String doctorEmail, MultipartFile file) throws IOException {
+
+		System.err.println("FILENAME : " + file.getName());
 		String modifiedEmail = patientEmail.replaceAll("@|\\.", "");
 		String directoryPath = diagnosisDir + File.separator + modifiedEmail;
 		File directory = new File(directoryPath);
@@ -55,6 +63,10 @@ public class MedicalFileService {
 	private String generatePassword() {
 		// Implement password generation logic here
 		return "generatedPassword";
+	}
+
+	public List<String> getFilePathsForPatient(String patientEmail) {
+		return medicalFileRepository.findFilePathsByPatientEmail(patientEmail);
 	}
 
 }

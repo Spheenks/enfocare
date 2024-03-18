@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Consultation {
 
+	private Long id;
+
 	private String patient;
 
 	private String doctor;
@@ -17,6 +19,14 @@ public class Consultation {
 	private String ailment;
 
 	private String symptoms;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getPatient() {
 		return patient;
