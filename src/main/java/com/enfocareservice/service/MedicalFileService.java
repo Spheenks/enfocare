@@ -29,7 +29,8 @@ public class MedicalFileService {
 		return medicalFileRepository.findDistinctPatientEmailsByDoctorEmail(doctorEmail);
 	}
 
-	public void uploadDiagnosisFile(String patientEmail, String doctorEmail, MultipartFile file) throws IOException {
+	public void uploadDiagnosisFile(String patientEmail, String doctorEmail, MultipartFile file, Long consultationId)
+			throws IOException {
 
 		System.err.println("FILENAME : " + file.getName());
 		String modifiedEmail = patientEmail.replaceAll("@|\\.", "");
@@ -55,6 +56,7 @@ public class MedicalFileService {
 		medicalFileEntity.setDoctorEmail(doctorEmail);
 		medicalFileEntity.setFilePath(filePath);
 		medicalFileEntity.setPassword(password);
+		medicalFileEntity.setConsultationId(consultationId);
 
 		medicalFileRepository.save(medicalFileEntity);
 	}

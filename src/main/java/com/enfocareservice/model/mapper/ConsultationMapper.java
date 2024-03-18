@@ -12,6 +12,7 @@ public class ConsultationMapper {
 
 		Consultation consultation = new Consultation();
 
+		consultation.setId(consultationEntity.getId());
 		consultation.setDiagnosis(consultationEntity.getDiagnosis());
 		consultation.setAilment(consultationEntity.getAilment());
 		consultation.setDate(consultationEntity.getDate());

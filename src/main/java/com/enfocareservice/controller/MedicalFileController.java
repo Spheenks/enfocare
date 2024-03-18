@@ -23,13 +23,14 @@ public class MedicalFileController {
 	@Autowired
 	private MedicalFileService medicalFileService;
 
-	@PostMapping("/upload/{patientEmail}/{doctorEmail}")
+	@PostMapping("/upload/{patientEmail}/{doctorEmail}/{consultationId}")
 	public ResponseEntity<String> handleDiagnosisFileUpload(@PathVariable String patientEmail,
-			@PathVariable String doctorEmail, @RequestParam("file") MultipartFile file) {
+			@PathVariable String doctorEmail, @PathVariable Long consultationId,
+			@RequestParam("file") MultipartFile file) {
 
 		System.err.println("UPLOAD FILE CALLED");
 		try {
-			medicalFileService.uploadDiagnosisFile(patientEmail, doctorEmail, file);
+			medicalFileService.uploadDiagnosisFile(patientEmail, doctorEmail, file, consultationId);
 			return ResponseEntity.ok("Diagnosis file uploaded successfully");
 		} catch (IOException e) {
 			System.err.println(e);
