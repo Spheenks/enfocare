@@ -18,4 +18,6 @@ public interface MedicalFileRepository extends JpaRepository<MedicalFileEntity, 
 	@Query(value = "SELECT file_path FROM enfocare.medical_file WHERE patient_email = :patientEmail", nativeQuery = true)
 	List<String> findFilePathsByPatientEmail(String patientEmail);
 
+	List<MedicalFileEntity> findByConsultationId(Long consultationId);
+
 }

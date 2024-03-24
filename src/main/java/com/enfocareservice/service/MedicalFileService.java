@@ -2,17 +2,24 @@ package com.enfocareservice.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.enfocareservice.entity.MedicalFileEntity;
+import com.enfocareservice.model.MedicalFile;
+import com.enfocareservice.model.mapper.MedicalFileMapper;
 import com.enfocareservice.repository.MedicalFileRepository;
 
 @Service
@@ -20,6 +27,9 @@ public class MedicalFileService {
 
 	@Autowired
 	private MedicalFileRepository medicalFileRepository;
+
+	@Autowired
+	private MedicalFileMapper medicalFileMapper;
 
 	@Value("${medicalfile.dir}")
 	private String diagnosisDir;
@@ -69,6 +79,29 @@ public class MedicalFileService {
 
 	public List<String> getFilePathsForPatient(String patientEmail) {
 		return medicalFileRepository.findFilePathsByPatientEmail(patientEmail);
+	}
+
+	public Resource loadFileAsResource(Long fileId) throws MalformedURLException {
+		Optional<MedicalFileEntity> fileEntityOptional = medicalFileRepository.findById(fileId);
+		if (fileEntityOptional.isPresent()) {
+			Path filePath = Paths.get(fileEntityOptional.get().getFilePath()).normalize();
+			Resource resource = new UrlResource(filePath.toUri());
+			if (resource.exists()) {
+				return resource;
+			} else {
+				// Handle the case where the file doesn't exist or is not accessible
+				throw new MalformedURLException("File not found " + fileId);
+			}
+		} else {
+			// Handle the case where the file entity was not found in the database
+			throw new MalformedURLException("File entity not found " + fileId);
+		}
+	}
+
+	public List<MedicalFile> getFilesByConsultationId(Long consultationId) {
+		// TODO Auto-generated method stub
+		return medicalFileRepository.findByConsultationId(consultationId).stream()
+				.map(medicalFileEntity -> medicalFileMapper.map(medicalFileEntity)).collect(Collectors.toList());
 	}
 
 }
