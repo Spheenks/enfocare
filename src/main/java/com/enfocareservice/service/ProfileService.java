@@ -103,6 +103,7 @@ public class ProfileService {
 	}
 
 	public Profile updateProfile(String email, Profile updatedProfile) {
+		System.err.println("COCK");
 		ProfileEntity existingProfileEntity = profileRepository.findByEmail(email);
 
 		if (existingProfileEntity != null) {
