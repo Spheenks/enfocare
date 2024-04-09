@@ -15,6 +15,7 @@ public class MedicalFileMapper {
 		model.setDoctorEmail(entity.getDoctorEmail());
 		model.setFilePath(entity.getFilePath());
 		model.setPassword(entity.getPassword());
+		model.setConsultationId(entity.getConsultationId());
 		return model;
 	}
 

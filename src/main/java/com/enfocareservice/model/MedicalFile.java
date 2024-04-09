@@ -7,6 +7,15 @@ public class MedicalFile {
 	private String doctorEmail;
 	private String filePath;
 	private String password;
+	private Long consultationId;
+
+	public Long getConsultationId() {
+		return consultationId;
+	}
+
+	public void setConsultationId(Long consultationId) {
+		this.consultationId = consultationId;
+	}
 
 	public Long getId() {
 		return id;
