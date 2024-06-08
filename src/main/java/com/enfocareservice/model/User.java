@@ -5,6 +5,16 @@ public class User {
 	private String email;
 	private String password;
 
+	private Long id;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getEmail() {
 		return email;
 	}
