@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 			@NonNull FilterChain filterChain) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 
 		final String authHeader = request.getHeader("Authorization");
 		final String jwt;
@@ -61,8 +60,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 				authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+			} else {
+				logger.debug("Token validation failed");
 			}
 
+		} else {
+			logger.debug("User details not found for the user: " + userEmail);
 		}
 		filterChain.doFilter(request, response);
 

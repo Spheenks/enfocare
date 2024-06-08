@@ -33,7 +33,12 @@ public class LobbyQueueService {
 		lobbyQueueEntity.setPatient(lobbyQueue.getPatient());
 		lobbyQueueEntity.setTimeIn(lobbyQueue.getTimeIn());
 
-		return lobbyQueueMapper.map(lobbyQueueRepository.save(lobbyQueueEntity));
+		LobbyQueueEntity savedEntity = lobbyQueueRepository.save(lobbyQueueEntity);
+
+		LobbyQueue resLobbyQueue = lobbyQueueMapper.map(lobbyQueueRepository.save(lobbyQueueEntity));
+		resLobbyQueue.setId(savedEntity.getId());
+
+		return resLobbyQueue;
 
 	}
 
@@ -64,12 +69,10 @@ public class LobbyQueueService {
 	}
 
 	public void deleteEntityByDoctorAndPatient(String doctor, String patient) {
-		// Delete entities by email
-		lobbyQueueRepository.deleteByDoctorAndPatient(doctor, patient);
 
-		// You can check if any entities were deleted by querying again or use the
-		// return type of the delete method
-		// For example, you might want to log a message if no entities were deleted
+		LobbyQueueEntity lobbyQueueEntity = lobbyQueueRepository.findByDoctorAndPatient(doctor, patient);
+
+		lobbyQueueRepository.delete(lobbyQueueEntity);
 		int countAfterDeletion = lobbyQueueRepository.countByDoctor(doctor);
 		if (countAfterDeletion == 0) {
 			System.out.println("No entities found for email: " + doctor);

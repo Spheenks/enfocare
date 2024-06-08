@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.enfocareservice.entity.UserEntity;
 import com.enfocareservice.model.ChangePasswordRequest;
+import com.enfocareservice.model.User;
+import com.enfocareservice.model.mapper.UserMapper;
 import com.enfocareservice.repository.UserRepository;
 
 @Service
@@ -20,24 +22,35 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 
+	@Autowired
+	private UserMapper userMapper;
+
 	public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
 		var user = (UserEntity) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-		// check if the current password is correct
 		if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
 			throw new IllegalStateException("Wrong password");
 		}
-		// check if the two new passwords are the same
+
 		if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
 			throw new IllegalStateException("Password are not the same");
 		}
 
-		// update the password
 		user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
-		// save the new password
 		repository.save(user);
+	}
+
+	public User findUserByEmail(String email) {
+		try {
+			UserEntity userEntity = repository.findByEmail(email)
+					.orElseThrow(() -> new IllegalArgumentException("User not found"));
+			return userMapper.map(userEntity);
+		} catch (Exception e) {
+			System.err.println("Failed to find user by email " + email + ": " + e.getMessage());
+			throw e;
+		}
 	}
 
 }

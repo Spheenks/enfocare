@@ -6,10 +6,15 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -37,6 +42,45 @@ public class MedicalFileService {
 	public List<String> getRecipentEmailsList(String doctorEmail) {
 
 		return medicalFileRepository.findDistinctPatientEmailsByDoctorEmail(doctorEmail);
+	}
+
+	public void protectPdfFile(String paramFile) throws MalformedURLException {
+		File file = new File(paramFile);
+		System.err.println("FILENAME RAW : " + file.getAbsolutePath());
+		System.err.println("FILENAMEs : " + paramFile);
+
+		try {
+			PDDocument document = Loader.loadPDF(file);
+
+			AccessPermission ap = new AccessPermission();
+
+			StandardProtectionPolicy spp = new StandardProtectionPolicy("panot", "panot", ap);
+
+			spp.setEncryptionKeyLength(128);
+
+			// Setting the access permissions
+			spp.setPermissions(ap);
+
+			// Protecting the document
+			document.protect(spp);
+
+			System.out.println("Document encrypted");
+
+			// Create a temporary file to save the encrypted PDF
+			File tempFile = File.createTempFile("temp_", ".pdf");
+
+			// Saving the document to the temporary file
+			document.save(tempFile.getAbsolutePath());
+
+			// Closing the document
+			document.close();
+
+			// Rename the temporary file to replace the original file
+			Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void uploadDiagnosisFile(String patientEmail, String doctorEmail, MultipartFile file, Long consultationId)
@@ -84,6 +128,8 @@ public class MedicalFileService {
 	public Resource loadFileAsResource(Long fileId) throws MalformedURLException {
 		Optional<MedicalFileEntity> fileEntityOptional = medicalFileRepository.findById(fileId);
 		if (fileEntityOptional.isPresent()) {
+
+			protectPdfFile(fileEntityOptional.get().getFilePath());
 			Path filePath = Paths.get(fileEntityOptional.get().getFilePath()).normalize();
 			Resource resource = new UrlResource(filePath.toUri());
 			if (resource.exists()) {
