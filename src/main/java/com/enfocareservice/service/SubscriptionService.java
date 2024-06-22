@@ -26,14 +26,9 @@ public class SubscriptionService {
 		return subscriptionRepository.findAll().stream().map(subscriptionMapper::map).collect(Collectors.toList());
 	}
 
-	public Subscription getSubscriptionById(Integer id) {
-		Optional<SubscriptionEntity> subscriptionEntity = subscriptionRepository.findById(id);
-		return subscriptionEntity.map(subscriptionMapper::map).orElse(null);
-	}
-
-	public Subscription createSubscription(Subscription subscription, String subscriptionType) {
+	public Subscription createSubscription(String email, String subscriptionType) {
 		SubscriptionEntity subscriptionEntity = new SubscriptionEntity();
-		subscriptionEntity.setEmail(subscription.getEmail());
+		subscriptionEntity.setEmail(email);
 		subscriptionEntity.setExpiry(calculateExpiryDate(subscriptionType));
 		SubscriptionEntity savedEntity = subscriptionRepository.save(subscriptionEntity);
 		return subscriptionMapper.map(savedEntity);
@@ -51,17 +46,16 @@ public class SubscriptionService {
 		return null;
 	}
 
-	public void deleteSubscription(Integer id) {
-		subscriptionRepository.deleteById(id);
-	}
-
-	public void checkAndDeleteExpiredSubscriptions() {
-		List<SubscriptionEntity> subscriptions = subscriptionRepository.findAll();
-		for (SubscriptionEntity subscription : subscriptions) {
+	public SubscriptionEntity getActiveSubscription(String email) {
+		Optional<SubscriptionEntity> subscriptionEntityOptional = subscriptionRepository.findByEmail(email);
+		return subscriptionEntityOptional.map(subscription -> {
 			if (subscription.getExpiry().isBefore(LocalDateTime.now())) {
-				subscriptionRepository.deleteById(subscription.getId());
+				subscriptionRepository.delete(subscription);
+				return null; // Subscription is expired, return null
+			} else {
+				return subscription; // Subscription is active, return the object
 			}
-		}
+		}).orElse(null); // No subscription found, return null
 	}
 
 	private LocalDateTime calculateExpiryDate(String subscriptionType) {

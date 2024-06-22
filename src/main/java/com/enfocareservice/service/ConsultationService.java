@@ -77,4 +77,8 @@ public class ConsultationService {
 		}
 	}
 
+	public long getCurrentMonthConsultationCountByDoctor(String doctor) {
+		return consultationRepository.countCurrentMonthConsultationsByDoctor(doctor);
+	}
+
 }

@@ -54,7 +54,7 @@ public class MedicalFileService {
 
 			AccessPermission ap = new AccessPermission();
 
-			StandardProtectionPolicy spp = new StandardProtectionPolicy("panot", "panot", ap);
+			StandardProtectionPolicy spp = new StandardProtectionPolicy("123456", "123456", ap);
 
 			spp.setEncryptionKeyLength(128);
 

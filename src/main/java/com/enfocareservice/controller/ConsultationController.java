@@ -72,4 +72,10 @@ public class ConsultationController {
 
 		return responseEntity;
 	}
+
+	@GetMapping("/doctor/{doctor}/current-month-count")
+	public ResponseEntity<Long> getCurrentMonthConsultationCountByDoctor(@PathVariable String doctor) {
+		long count = consultationService.getCurrentMonthConsultationCountByDoctor(doctor);
+		return ResponseEntity.ok(count);
+	}
 }

@@ -4,21 +4,20 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enfocareservice.entity.SubscriptionEntity;
 import com.enfocareservice.model.Subscription;
+import com.enfocareservice.model.SubscriptionRequest;
 import com.enfocareservice.service.SubscriptionService;
 
 @RestController
-@RequestMapping("/subscriptions")
+@RequestMapping("/enfocare/subscriptions")
 public class SubscriptionController {
 
 	@Autowired
@@ -29,42 +28,21 @@ public class SubscriptionController {
 		return subscriptionService.getAllSubscriptions();
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Subscription> getSubscriptionById(@PathVariable Integer id) {
-		Subscription subscription = subscriptionService.getSubscriptionById(id);
+	@PostMapping("/subscribe")
+	public Subscription createSubscription(@RequestBody SubscriptionRequest subscription) {
+		return subscriptionService.createSubscription(subscription.getEmail(), subscription.getSubscriptionType());
+	}
+
+	@GetMapping("/check-subscription")
+	public ResponseEntity<?> checkSubscriptionStatus(@RequestParam String email) {
+
+		System.err.println("CHECK SYBS");
+		SubscriptionEntity subscription = subscriptionService.getActiveSubscription(email);
 		if (subscription != null) {
-			return ResponseEntity.ok(subscription);
+			return ResponseEntity.ok(subscription); // Return OK with the subscription object
 		} else {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.notFound().build(); // Return 404 if no active subscription found
 		}
 	}
 
-	@PostMapping
-	public Subscription createSubscription(@RequestBody Subscription subscription,
-			@RequestParam String subscriptionType) {
-		return subscriptionService.createSubscription(subscription, subscriptionType);
-	}
-
-	@PutMapping("/{id}")
-	public ResponseEntity<Subscription> updateSubscription(@PathVariable Integer id,
-			@RequestBody Subscription subscription, @RequestParam String subscriptionType) {
-		Subscription updatedSubscription = subscriptionService.updateSubscription(id, subscription, subscriptionType);
-		if (updatedSubscription != null) {
-			return ResponseEntity.ok(updatedSubscription);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteSubscription(@PathVariable Integer id) {
-		subscriptionService.deleteSubscription(id);
-		return ResponseEntity.noContent().build();
-	}
-
-	@PostMapping("/check-expiry")
-	public ResponseEntity<Void> checkAndDeleteExpiredSubscriptions() {
-		subscriptionService.checkAndDeleteExpiredSubscriptions();
-		return ResponseEntity.noContent().build();
-	}
 }

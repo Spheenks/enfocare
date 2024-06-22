@@ -16,4 +16,14 @@ public class SubscriptionMapper {
 		return subscription;
 	}
 
+	public SubscriptionEntity mapToEntity(Subscription subscription) {
+
+		SubscriptionEntity subscriptionEntity = new SubscriptionEntity();
+		subscriptionEntity.setId(subscription.getId());
+		subscriptionEntity.setEmail(subscription.getEmail());
+		subscriptionEntity.setExpiry(subscription.getExpiry());
+
+		return subscriptionEntity;
+	}
+
 }
