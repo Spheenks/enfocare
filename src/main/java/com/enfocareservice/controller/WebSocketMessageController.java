@@ -24,6 +24,8 @@ public class WebSocketMessageController {
 	@MessageMapping("/enfocare/chat/send")
 	public void receiveMessageFromClient(@Payload Message message) throws Exception {
 
+		System.err.println(message.getSenderId() + " " + message.getReceiverId());
+
 		System.out.println(" receiveMessageFromClient Received message: " + message);
 
 		if (message.getSessionId() == null) {

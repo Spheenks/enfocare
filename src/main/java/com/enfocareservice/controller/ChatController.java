@@ -72,7 +72,6 @@ public class ChatController {
 	public ResponseEntity<ChatSession> getLatestSessionByParticipants(
 			@RequestParam("participantIds") String participantIds) {
 
-		System.err.println("TANGINA TALAGA" + participantIds);
 		Set<Integer> ids = Arrays.stream(participantIds.split(",")).map(String::trim).map(Integer::parseInt)
 				.collect(Collectors.toSet());
 
